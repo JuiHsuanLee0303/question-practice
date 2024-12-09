@@ -5,12 +5,12 @@ import { RouterView } from 'vue-router'
 <template>
   <div class="min-h-screen bg-gray-100">
     <header class="bg-white shadow">
-      <div class="container mx-auto px-4 py-4">
-        <h1 class="text-2xl font-bold text-gray-800">題庫練習系統</h1>
+      <div class="container mx-auto px-4 py-4 max-w-6xl">
+        <h1 class="text-2xl font-bold text-gray-800 text-center">題庫練習系統</h1>
       </div>
     </header>
 
-    <main>
+    <main class="container mx-auto px-4 max-w-6xl">
       <RouterView />
     </main>
   </div>
