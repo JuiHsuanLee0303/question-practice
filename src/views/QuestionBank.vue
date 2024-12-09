@@ -292,6 +292,7 @@ interface QuestionFile {
   name: string
   path: string
   type: string
+  tags: string[]
 }
 
 const questionText = ref('')
@@ -344,7 +345,6 @@ const loadFileContent = async (file: QuestionFile) => {
       .replace(/\n+/g, '\n') // 移除多餘空行
       .trim() // 移除首尾空白
 
-    console.log(`載入檔案 ${file.path}:`, content.substring(0, 200))
     fileContentsCache.set(file.path, content)
   } catch (error) {
     console.error(`載入檔案 ${file.path} 失敗:`, error)
