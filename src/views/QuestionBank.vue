@@ -288,7 +288,7 @@ const loadFileContent = async (file: QuestionFile) => {
 onMounted(async () => {
   try {
     isLoading.value = true
-    const response = await fetch('/questions/index.json')
+    const response = await fetch('/question-practice/questions/index.json')
     if (!response.ok) throw new Error('無法載入題庫目錄')
     const data = await response.json()
     questionFiles.value = data.files || data
