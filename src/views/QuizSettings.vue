@@ -1,59 +1,81 @@
 <template>
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl text-gray-800 font-bold mb-4">測驗設定</h1>
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl text-gray-800 font-bold mb-8">測驗設定</h1>
 
-    <div class="max-w-md mx-auto">
+    <div class="bg-white rounded-lg shadow-sm p-6">
       <!-- 選擇章節 -->
-      <div class="mb-6">
-        <div class="flex justify-between items-center mb-2">
-          <h2 class="text-lg text-gray-800 font-semibold">選擇章節</h2>
+      <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl text-gray-800 font-semibold">選擇章節</h2>
           <button
             @click="toggleAllChapters"
-            class="text-sm px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
+            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
           >
             {{ isAllSelected ? '取消全選' : '全選' }}
           </button>
         </div>
-        <div class="space-y-2">
-          <label v-for="chapter in chapters" :key="chapter.id" class="flex items-center space-x-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <label
+            v-for="chapter in chapters"
+            :key="chapter.id"
+            class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer group"
+          >
             <input
               type="checkbox"
               v-model="selectedChapters"
               :value="chapter.id"
-              class="form-checkbox"
+              class="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
             />
-            <span class="text-gray-800"
-              >{{ chapter.name }} ({{ chapter.questions.length }} 題)</span
-            >
+            <div class="ml-3">
+              <span class="text-gray-800 font-medium group-hover:text-gray-900">
+                {{ chapter.name }}
+              </span>
+              <span class="ml-2 text-gray-500 text-sm"> ({{ chapter.questions.length }} 題) </span>
+            </div>
           </label>
         </div>
       </div>
 
       <!-- 選擇題數 -->
-      <div class="mb-6">
-        <h2 class="text-lg text-gray-800 font-semibold mb-2">選擇題數</h2>
-        <input
-          type="number"
-          v-model="numberOfQuestions"
-          min="1"
-          :max="maxQuestions"
-          class="w-full p-2 border rounded text-gray-800"
-        />
-        <p class="mt-1 text-gray-800">可選擇題數範圍：1 - {{ maxQuestions }} 題</p>
+      <div class="mb-8">
+        <h2 class="text-2xl text-gray-800 font-semibold mb-4">選擇題數</h2>
+        <div class="max-w-xs">
+          <div class="flex items-center space-x-4">
+            <input
+              type="number"
+              v-model="numberOfQuestions"
+              min="1"
+              :max="maxQuestions"
+              class="w-24 p-3 text-gray-700 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
+            <span class="text-gray-700">題</span>
+          </div>
+          <p class="mt-2 text-gray-600">可選擇題數範圍：1 - {{ maxQuestions }} 題</p>
+        </div>
       </div>
 
-      <!-- 開始測驗按鈕 -->
-      <div class="flex justify-between">
-        <router-link to="/" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+      <!-- 操作按鈕 -->
+      <div class="flex flex-wrap gap-4">
+        <router-link
+          to="/"
+          class="px-6 py-2.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium"
+        >
           返回
         </router-link>
         <button
           @click="startQuiz"
           :disabled="!canStartQuiz"
-          class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-300"
+          class="px-6 py-2.5 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
         >
           開始測驗
         </button>
+      </div>
+
+      <!-- 提示訊息 -->
+      <div v-if="!canStartQuiz" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p class="text-yellow-700">
+          {{ getErrorMessage() }}
+        </p>
       </div>
     </div>
   </div>
@@ -102,6 +124,19 @@ const canStartQuiz = computed(() => {
   )
 })
 
+function getErrorMessage() {
+  if (selectedChapters.value.length === 0) {
+    return '請至少選擇一個章節'
+  }
+  if (numberOfQuestions.value <= 0) {
+    return '題數必須大於 0'
+  }
+  if (numberOfQuestions.value > maxQuestions.value) {
+    return `題數不能超過 ${maxQuestions.value}`
+  }
+  return ''
+}
+
 async function startQuiz() {
   if (!canStartQuiz.value) return
 
@@ -111,8 +146,12 @@ async function startQuiz() {
       numberOfQuestions: numberOfQuestions.value,
     })
     await router.push('/quiz')
-  } catch (error: Error) {
-    alert(`開始測驗時發生錯誤: ${error.message}`)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      alert(`開始測驗時發生錯誤: ${error.message}`)
+    } else {
+      alert('開始測驗時發生未知錯誤')
+    }
   }
 }
 </script>

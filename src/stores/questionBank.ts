@@ -9,7 +9,7 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
 
   async function parseQuestionText(text: string): Promise<Chapter[]> {
     const lines = text.split('\n').filter((line) => line.trim())
-    const chapters: Chapter[] = []
+    const parsedChapters: Chapter[] = []
     let currentChapter: Chapter | null = null
     let currentQuestion: Question | null = null
 
@@ -24,7 +24,7 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
             currentQuestion = null
           }
           if (currentChapter) {
-            chapters.push(currentChapter)
+            parsedChapters.push(currentChapter)
           }
           currentChapter = {
             id: crypto.randomUUID(),
@@ -91,10 +91,10 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
         if (currentQuestion) {
           currentChapter.questions.push(currentQuestion)
         }
-        chapters.push(currentChapter)
+        parsedChapters.push(currentChapter)
       }
 
-      return chapters
+      return parsedChapters
     } catch (error) {
       throw error
     }
@@ -106,7 +106,7 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
       if (parsedChapters.length === 0) {
         throw new Error('沒有找到有效的題目')
       }
-      chapters.value = parsedChapters
+      chapters.value = [...parsedChapters]
     } catch (error) {
       throw error
     }
@@ -153,12 +153,33 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
     try {
       const totalQuestions = currentQuiz.value.length
       const correctAnswers = currentQuiz.value.filter((q) => {
-        const userAnswerSet = new Set(q.userAnswers || [])
-        const correctAnswerSet = new Set(q.answers)
-        return (
-          userAnswerSet.size === correctAnswerSet.size &&
-          [...userAnswerSet].every((answer) => correctAnswerSet.has(answer))
-        )
+        // 確保 userAnswers 存在且是陣列
+        const userAnswers = q.userAnswers || []
+        const correctAnswers = q.answers
+
+        // 如果是多選題
+        if (q.isMultipleChoice) {
+          // 1. 檢查答案數量是否相同
+          if (userAnswers.length !== correctAnswers.length) {
+            return false
+          }
+          // 2. 檢查每個答案是否都正確（順序無關）
+          const userAnswerSet = new Set(userAnswers)
+          const correctAnswerSet = new Set(correctAnswers)
+          return (
+            // 確保使用者答案和正確答案的數量相同
+            userAnswerSet.size === correctAnswerSet.size &&
+            // 確保每個使用者答案都在正確答案中
+            [...userAnswerSet].every((answer) => correctAnswerSet.has(answer)) &&
+            // 確保每個正確答案都在使用者答案中
+            [...correctAnswerSet].every((answer) => userAnswerSet.has(answer))
+          )
+        }
+        // 如果是單選題
+        else {
+          // 單選題只需要比較第一個答案
+          return userAnswers.length === 1 && userAnswers[0] === correctAnswers[0]
+        }
       }).length
 
       quizResult.value = {
