@@ -1,6 +1,6 @@
 <template>
-  <div class="py-8">
-    <div class="container mx-auto px-4 max-w-6xl">
+  <div class="min-h-screen bg-gray-100">
+    <div class="container mx-auto px-4 max-w-6xl py-8">
       <template v-if="!quizResult">
         <div class="bg-white rounded-lg shadow-sm p-6">
           <!-- 進度條 -->
@@ -118,7 +118,11 @@
           </div>
 
           <!-- 返回按鈕 -->
-          <div class="flex justify-center">
+          <div class="flex justify-center space-x-4">
+            <!-- <button @click="retakeQuiz"
+              class="px-8 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium">
+              再來一次
+            </button> -->
             <router-link to="/"
               class="px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium">
               返回題庫
@@ -140,7 +144,7 @@ const store = useQuestionBankStore()
 const quiz = store.currentQuiz
 const quizResult = computed(() => store.quizResult)
 
-// 如果沒有測驗題目，返回首頁
+// 如果沒有測驗題目，返回頁
 onMounted(() => {
   if (quiz.length === 0) {
     router.push('/')
@@ -195,5 +199,18 @@ function submitQuiz() {
 // 初始化第一題的答案
 if (currentQuestion.value) {
   loadCurrentAnswer()
+}
+
+// 重新开始测验
+async function retakeQuiz() {
+  // 使用上次的设置重新生成测验题目
+  await store.regenerateQuiz()
+  // 重置当前状态
+  currentIndex.value = 0
+  currentAnswers.value = []
+  // 加载第一题的答案
+  if (currentQuestion.value) {
+    loadCurrentAnswer()
+  }
 }
 </script>

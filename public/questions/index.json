@@ -1,25 +1,25 @@
 [
   {
     "name": "網路概論",
-    "path": "/questions/network.txt",
+    "path": "questions/network.txt",
     "type": "文字檔",
     "tags": ["網路概論"]
   },
   {
     "name": "資料庫系統",
-    "path": "/questions/database.txt",
+    "path": "questions/database.txt",
     "type": "文字檔",
     "tags": ["資料庫系統"]
   },
   {
     "name": "程式設計",
-    "path": "/questions/programming.txt",
+    "path": "questions/programming.txt",
     "type": "文字檔",
     "tags": ["程式設計"]
   },
   {
     "name": "TQC 題庫",
-    "path": "/questions/tqc.docx",
+    "path": "questions/tqc.docx",
     "type": "Word檔",
     "tags": ["TQC"]
   }

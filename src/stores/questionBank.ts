@@ -6,6 +6,7 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
   const chapters = ref<Chapter[]>([])
   const currentQuiz = ref<QuizQuestion[]>([])
   const quizResult = ref<QuizResult | null>(null)
+  const lastQuizSettings = ref<QuizSettings | null>(null)
 
   async function parseQuestionText(text: string): Promise<Chapter[]> {
     const lines = text.split('\n').filter((line) => line.trim())
@@ -114,6 +115,7 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
 
   async function startQuiz(settings: QuizSettings) {
     try {
+      lastQuizSettings.value = settings
       const availableQuestions = chapters.value
         .filter((chapter) => settings.selectedChapters.includes(chapter.id))
         .flatMap((chapter) => chapter.questions)
@@ -122,13 +124,30 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
         throw new Error('所選章節中沒有題目')
       }
 
-      const selectedQuestions = [...availableQuestions]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, settings.numberOfQuestions)
-        .map((q) => ({
-          ...q,
-          userAnswers: [] as string[],
-        }))
+      // 使用更强的随机性
+      const getRandomIndex = () =>
+        Math.floor(
+          (crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) *
+            availableQuestions.length,
+        )
+
+      // 使用新的选题逻辑
+      const selectedQuestions: QuizQuestion[] = []
+      const usedIndices = new Set<number>()
+
+      while (
+        selectedQuestions.length < settings.numberOfQuestions &&
+        usedIndices.size < availableQuestions.length
+      ) {
+        const index = getRandomIndex()
+        if (!usedIndices.has(index)) {
+          usedIndices.add(index)
+          selectedQuestions.push({
+            ...availableQuestions[index],
+            userAnswers: [],
+          })
+        }
+      }
 
       currentQuiz.value = selectedQuestions
       quizResult.value = null
@@ -198,13 +217,23 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
     }
   }
 
+  async function regenerateQuiz() {
+    if (!lastQuizSettings.value) {
+      throw new Error('無法重新開始測驗：沒有上次的設置')
+    }
+    await startQuiz(lastQuizSettings.value)
+    quizResult.value = null
+  }
+
   return {
     chapters,
     currentQuiz,
     quizResult,
+    lastQuizSettings,
     importQuestions,
     startQuiz,
     submitAnswer,
     calculateResult,
+    regenerateQuiz,
   }
 })
