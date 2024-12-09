@@ -6,7 +6,8 @@ import { RouterView } from 'vue-router'
   <div class="min-h-screen bg-gray-100">
     <header class="bg-white shadow">
       <div class="container mx-auto px-4 py-4 max-w-6xl">
-        <h1 class="text-2xl font-bold text-gray-800 text-center">題庫練習系統</h1>
+        <h1 class="text-2xl font-bold text-gray-800 text-center"><router-link to="/"
+            class="hover:text-gray-500">題庫練習系統</router-link></h1>
       </div>
     </header>
 

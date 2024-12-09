@@ -143,6 +143,61 @@
           </div>
         </div>
       </div>
+
+      <!-- 格式說明 modal -->
+      <div v-if="showFormatModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full mx-4 p-6">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-xl font-semibold text-gray-800">題目格式說明</h3>
+            <button @click="showFormatModal = false" class="text-gray-500 hover:text-gray-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="space-y-4 text-gray-600">
+            <p>請依照以下格式輸入題目：</p>
+            <pre class="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap">
+第一章
+1-1.這是第一題的內容
+(A)選項一
+(B)選項二
+(C)選項三
+(D)選項四
+答案:A
+
+1-2.這是第二題的內容（複選題）
+(A)選項一
+(B)選項二
+(C)選項三
+(D)選項四
+答案:ABC
+
+第二章
+2-1.這是第二章第一題
+...
+            </pre>
+            <div class="space-y-2">
+              <p>注意事項：</p>
+              <ul class="list-disc list-inside space-y-1">
+                <li>章節標題必須以「第X章」開頭</li>
+                <li>題號格式為「章節-題號」，如：1-1、2-3 等</li>
+                <li>選項需以大寫英文字母標示，格式為 (A)、(B)、(C)...</li>
+                <li>答案需以「答案:」開頭，後接大寫英文字母，不需空格</li>
+                <li>複選題直接連續輸入答案字母，如：ABC</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <button @click="showFormatModal = false"
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+              我知道了
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
