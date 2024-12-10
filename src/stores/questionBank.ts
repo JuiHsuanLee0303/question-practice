@@ -58,8 +58,6 @@ export const useQuestionBankStore = defineStore('questionBank', () => {
           continue
         }
 
-        console.log(currentQuestion?.questionNumber)
-
         // 確保有題目
         if (!currentQuestion) {
           continue
