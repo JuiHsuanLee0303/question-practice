@@ -31,12 +31,20 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async login(email: string, password: string) {
       try {
+        console.log('Attempting login...')
         const response = await axios.post(`${API_BASE_URL}/auth/login`, {
           email,
           password,
         })
 
+        console.log('Login response:', response.data)
         const { access_token, user } = response.data
+
+        if (!access_token || !user || !user.username) {
+          console.error('Invalid login response:', response.data)
+          throw new Error('Invalid login response')
+        }
+
         this.token = access_token
         this.user = user
         this.isAuthenticated = true
@@ -45,8 +53,8 @@ export const useAuthStore = defineStore('auth', {
         axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
 
         return true
-      } catch (error) {
-        console.error('Login failed:', error)
+      } catch (error: any) {
+        console.error('Login failed:', error.response?.data || error.message)
         throw error
       }
     },
@@ -79,6 +87,7 @@ export const useAuthStore = defineStore('auth', {
     async checkAuth() {
       const token = localStorage.getItem('token')
       if (!token) {
+        console.log('No token found in localStorage')
         this.logout()
         return false
       }
@@ -89,12 +98,23 @@ export const useAuthStore = defineStore('auth', {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
         // 獲取用戶信息
+        console.log('Fetching user info...')
         const response = await axios.get(`${API_BASE_URL}/auth/verify`)
-        this.user = response.data
+        console.log('User info response:', response.data)
+        
+        const userData = response.data.user
+        const isVerified = response.data.verified
+        if (!userData || typeof userData !== 'object') {
+          console.error('Invalid user data format:', userData)
+          this.logout()
+          return false
+        }
+
+        this.user = userData
         this.isAuthenticated = true
         return true
-      } catch (error) {
-        console.error('Auth check failed:', error)
+      } catch (error: any) {
+        console.error('Auth check failed:', error.response?.data || error.message)
         this.logout()
         return false
       }

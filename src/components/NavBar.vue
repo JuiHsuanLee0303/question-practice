@@ -5,7 +5,7 @@
         <div class="flex">
           <!-- Logo -->
           <div class="flex-shrink-0 flex items-center">
-            <router-link to="/" class="text-xl font-bold text-gray-800"> 題庫練習 </router-link>
+            <router-link to="/" class="text-xl font-bold text-gray-800"> 線上題庫測驗系統 </router-link>
           </div>
 
           <!-- 導航連結 -->
@@ -20,6 +20,30 @@
               ]"
             >
               題庫
+            </router-link>
+            <router-link
+              v-if="authStore.isLoggedIn"
+              to="/question-converter"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2"
+              :class="[
+                $route.path === '/question-converter'
+                  ? 'border-blue-500'
+                  : 'border-transparent hover:border-gray-300',
+              ]"
+            >
+              題目轉換
+            </router-link>
+            <router-link
+              v-if="authStore.isLoggedIn"
+              to="/question-list"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2"
+              :class="[
+                $route.path === '/question-list'
+                  ? 'border-blue-500'
+                  : 'border-transparent hover:border-gray-300',
+              ]"
+            >
+              題目列表
             </router-link>
           </div>
         </div>
@@ -133,6 +157,22 @@
           :class="{ 'bg-gray-50': $route.path === '/' }"
         >
           題庫
+        </router-link>
+        <router-link
+          v-if="authStore.isLoggedIn"
+          to="/question-converter"
+          class="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+          :class="{ 'bg-gray-50': $route.path === '/question-converter' }"
+        >
+          題目轉換
+        </router-link>
+        <router-link
+          v-if="authStore.isLoggedIn"
+          to="/question-list"
+          class="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+          :class="{ 'bg-gray-50': $route.path === '/question-list' }"
+        >
+          題目列表
         </router-link>
       </div>
 

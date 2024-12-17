@@ -39,6 +39,18 @@ const router = createRouter({
       component: () => import('@/views/UserHistory.vue'),
       meta: { requiresAuth: true },
     },
+    {
+      path: '/question-converter',
+      name: 'question-converter',
+      component: () => import('@/views/QuestionConverter.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/question-list',
+      name: 'question-list',
+      component: () => import('@/views/QuestionList.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 

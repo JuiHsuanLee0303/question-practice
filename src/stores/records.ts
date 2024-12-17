@@ -47,6 +47,7 @@ export const useRecordsStore = defineStore('records', {
       this.loading = true
       this.error = null
       try {
+        console.log(`GET /records/user/${userId}`)
         const response = await axios.get(`${API_BASE_URL}/records/user/${userId}`)
         this.records = response.data || []
         console.log(this.records)
@@ -63,6 +64,7 @@ export const useRecordsStore = defineStore('records', {
       this.loading = true
       this.error = null
       try {
+        console.log(`GET /records/stats/${userId}`)
         const response = await axios.get(`${API_BASE_URL}/records/stats/${userId}`)
         this.statistics = response.data || defaultStatistics
       } catch (error) {
