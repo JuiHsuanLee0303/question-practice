@@ -1,27 +1,75 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import QuestionBank from '@/views/QuestionBank.vue'
-import QuizSettings from '@/views/QuizSettings.vue'
-import QuizPage from '@/views/QuizPage.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'questionBank',
-      component: QuestionBank,
+      name: 'home',
+      component: () => import('@/views/QuestionBank.vue'),
     },
     {
       path: '/quiz-settings',
-      name: 'quizSettings',
-      component: QuizSettings,
+      name: 'quiz-settings',
+      component: () => import('@/views/QuizSettings.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/quiz',
       name: 'quiz',
-      component: QuizPage,
+      component: () => import('@/views/QuizPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/Login.vue'),
+      meta: { guest: true },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/Register.vue'),
+      meta: { guest: true },
+    },
+    {
+      path: '/history',
+      name: 'history',
+      component: () => import('@/views/UserHistory.vue'),
+      meta: { requiresAuth: true },
     },
   ],
+})
+
+// 路由守衛
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+  const isAuthenticated = await authStore.checkAuth()
+
+  // 需要認證的路由
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath },
+      })
+    } else {
+      next()
+    }
+  }
+  // 訪客路由（登入/註冊）
+  else if (to.matched.some((record) => record.meta.guest)) {
+    if (isAuthenticated) {
+      next('/')
+    } else {
+      next()
+    }
+  }
+  // 其他路由
+  else {
+    next()
+  }
 })
 
 export default router
