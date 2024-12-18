@@ -36,7 +36,7 @@ export const useAuthStore = defineStore('auth', {
           password,
         })
 
-        console.log('Login response:', response.data)
+        console.log('Login response received successfully')
         const { access_token, user } = response.data
 
         if (!access_token || !user || !user.username) {
@@ -99,7 +99,7 @@ export const useAuthStore = defineStore('auth', {
         // 獲取用戶信息
         console.log('Fetching user info...')
         const response = await axios.get(`${API_BASE_URL}/auth/verify`)
-        console.log('User info response:', response.data)
+        console.log('User info received successfully')
 
         const userData = response.data.user
         const isVerified = response.data.verified

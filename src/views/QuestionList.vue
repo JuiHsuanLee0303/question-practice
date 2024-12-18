@@ -2,32 +2,22 @@
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6">題目列表</h1>
 
-    <!-- 搜索和筛 -->
+    <!-- 搜索和篩選 -->
     <div class="mb-6 flex gap-4">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="搜索題目..."
-        class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <select
-        v-model="selectedExam"
-        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
+      <input v-model="searchQuery" type="text" placeholder="搜索題目..."
+        class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <select v-model="selectedExam"
+        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="">所有考試</option>
-        <option v-for="exam in examList" :key="exam.id" :value="exam.id">
-          {{ exam.name }}
+        <option v-for="exam in examList" :key="exam.examId" :value="exam.examId">
+          {{ exam.examName }}
         </option>
       </select>
     </div>
 
     <!-- 题目列表 -->
     <div class="space-y-6">
-      <div
-        v-for="question in filteredQuestions"
-        :key="question.id"
-        class="bg-white p-6 rounded-lg shadow"
-      >
+      <div v-for="question in filteredQuestions" :key="question.id" class="bg-white p-6 rounded-lg shadow">
         <div class="flex justify-between items-start mb-4">
           <div>
             <h3 class="text-lg font-semibold mb-2">
@@ -38,22 +28,18 @@
             <p class="text-gray-700">{{ question.content }}</p>
           </div>
           <div class="flex gap-2">
-            <button
-              @click="editQuestion(question)"
-              class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
+            <button @click="editQuestion(question)"
+              class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
               修改
             </button>
-            <button
-              @click="confirmDelete(question)"
-              class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-            >
+            <button @click="confirmDelete(question)"
+              class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">
               刪除
             </button>
           </div>
         </div>
 
-        <!-- 选项列表 -->
+        <!-- 選項列表 -->
         <div class="space-y-2 ml-4">
           <div v-for="(option, index) in question.options" :key="index" class="text-gray-600">
             {{ ['A', 'B', 'C', 'D'][index] }}. {{ option }}
@@ -67,65 +53,35 @@
     </div>
 
     <!-- 编辑模态框 -->
-    <Modal
-      v-if="showEditModal"
-      :show="showEditModal"
-      :title="'編輯題目'"
-      :message="''"
-      @close="showEditModal = false"
-    >
+    <Modal v-if="showEditModal" :show="showEditModal" :title="'編輯題目'" :message="''" @close="showEditModal = false">
       <template #default>
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">題目內容</label>
-            <textarea
-              v-model="editingQuestion.content"
-              rows="3"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            ></textarea>
+            <textarea v-model="editingQuestion.content" rows="3"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
           </div>
 
           <div v-for="(option, index) in editingQuestion.options" :key="index">
-            <label class="block text-sm font-medium text-gray-700"
-              >選項 {{ ['A', 'B', 'C', 'D'][index] }}</label
-            >
-            <input
-              v-model="editingQuestion.options[index]"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
+            <label class="block text-sm font-medium text-gray-700">選項 {{ ['A', 'B', 'C', 'D'][index] }}</label>
+            <input v-model="editingQuestion.options[index]" type="text"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700">答案</label>
             <div class="mt-1 space-x-2">
               <template v-if="editingQuestion.isMultiple">
-                <label
-                  v-for="opt in ['A', 'B', 'C', 'D']"
-                  :key="opt"
-                  class="inline-flex items-center"
-                >
-                  <input
-                    type="checkbox"
-                    :value="opt"
-                    v-model="editingQuestion.answer"
-                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
+                <label v-for="opt in ['A', 'B', 'C', 'D']" :key="opt" class="inline-flex items-center">
+                  <input type="checkbox" :value="opt" v-model="editingQuestion.answer"
+                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                   <span class="ml-2">{{ opt }}</span>
                 </label>
               </template>
               <template v-else>
-                <label
-                  v-for="opt in ['A', 'B', 'C', 'D']"
-                  :key="opt"
-                  class="inline-flex items-center"
-                >
-                  <input
-                    type="radio"
-                    :value="opt"
-                    v-model="editingQuestion.answer"
-                    class="border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
+                <label v-for="opt in ['A', 'B', 'C', 'D']" :key="opt" class="inline-flex items-center">
+                  <input type="radio" :value="opt" v-model="editingQuestion.answer"
+                    class="border-gray-300 text-blue-600 focus:ring-blue-500" />
                   <span class="ml-2">{{ opt }}</span>
                 </label>
               </template>
@@ -135,16 +91,12 @@
       </template>
       <template #footer>
         <div class="flex justify-end gap-2">
-          <button
-            @click="showEditModal = false"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-          >
+          <button @click="showEditModal = false"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
             取消
           </button>
-          <button
-            @click="saveQuestion"
-            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
-          >
+          <button @click="saveQuestion"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
             保存
           </button>
         </div>
@@ -152,25 +104,16 @@
     </Modal>
 
     <!-- 删除确认模态框 -->
-    <Modal
-      v-if="showDeleteModal"
-      :show="showDeleteModal"
-      title="確認刪除"
-      :message="'確定要刪除這個題目嗎？此操作無法撤銷。'"
-      @close="showDeleteModal = false"
-    >
+    <Modal v-if="showDeleteModal" :show="showDeleteModal" title="確認刪除" :message="'確定要刪除這個題目嗎？此操作無法撤銷。'"
+      @close="showDeleteModal = false">
       <template #footer>
         <div class="flex justify-end gap-2">
-          <button
-            @click="showDeleteModal = false"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-          >
+          <button @click="showDeleteModal = false"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
             取消
           </button>
-          <button
-            @click="deleteQuestion"
-            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
-          >
+          <button @click="deleteQuestion"
+            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
             確認刪除
           </button>
         </div>
@@ -198,7 +141,7 @@ interface Question {
 }
 
 const questions = ref<Question[]>([])
-const examList = ref<{ id: string; name: string }[]>([])
+const examList = ref<{ examId: string; examName: string }[]>([])
 const searchQuery = ref('')
 const selectedExam = ref('')
 const showEditModal = ref(false)
@@ -230,7 +173,8 @@ const fetchQuestions = async () => {
 // 获取考试列表
 const fetchExams = async () => {
   try {
-    const response = await axios.get('/exams')
+    const response = await axios.get('/questions/question-banks')
+    console.log(response.data)
     examList.value = response.data
   } catch (error) {
     console.error('Failed to fetch exams:', error)

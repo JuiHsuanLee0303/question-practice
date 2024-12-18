@@ -3,8 +3,8 @@
     <div class="container mx-auto px-4 mt-14 md:mt-0">
       <!-- 歡迎區域 -->
       <div class="text-center mb-16">
-        <h1 class="text-5xl font-bold text-gray-900 mb-6">線上題庫測驗系統</h1>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <h1 class="text-3xl sm:text-5xl font-bold text-gray-900 mb-6">線上題庫測驗系統</h1>
+        <p class="text-xl text-gray-600 max-w-4xl mx-auto">
           專業的線上學習平台，提供多元化題庫和即時測驗功能，幫助你突破學習瓶頸，邁向卓越
         </p>
       </div>
@@ -12,23 +12,13 @@
       <!-- 功能卡片區域 -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
         <!-- 題庫練習 -->
-        <router-link
-          to="/question-bank"
-          class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300"
-        >
-          <div class="h-16 w-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-200 transition-colors">
-            <svg
-              class="h-8 w-8 text-blue-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
+        <router-link to="/question-bank"
+          class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+          <div
+            class="h-16 w-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-200 transition-colors">
+            <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
           <h2 class="text-2xl font-bold text-gray-900 mb-3">題庫練習</h2>
@@ -38,23 +28,13 @@
         </router-link>
 
         <!-- 線上題庫 -->
-        <router-link
-          to="/online-bank"
-          class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300"
-        >
-          <div class="h-16 w-16 bg-green-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-green-200 transition-colors">
-            <svg
-              class="h-8 w-8 text-green-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-              />
+        <router-link to="/online-bank"
+          class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+          <div
+            class="h-16 w-16 bg-green-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-green-200 transition-colors">
+            <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
           <h2 class="text-2xl font-bold text-gray-900 mb-3">線上題庫</h2>
@@ -64,23 +44,13 @@
         </router-link>
 
         <!-- 歷史紀錄 -->
-        <router-link
-          to="/history"
-          class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300"
-        >
-          <div class="h-16 w-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-200 transition-colors">
-            <svg
-              class="h-8 w-8 text-purple-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+        <router-link to="/history"
+          class="group bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+          <div
+            class="h-16 w-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-200 transition-colors">
+            <svg class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <h2 class="text-2xl font-bold text-gray-900 mb-3">學習歷程</h2>
@@ -150,25 +120,22 @@
       <div class="mt-24">
         <h2 class="text-3xl font-bold text-center text-gray-900 mb-16">最新消息</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div
-            v-for="news in newsItems"
-            :key="news.date"
-            class="bg-white rounded-2xl shadow-lg p-8 group hover:shadow-xl transition-shadow duration-300 flex flex-col"
-          >
+          <div v-for="news in newsItems" :key="news.date"
+            class="bg-white rounded-2xl shadow-lg p-8 group hover:shadow-xl transition-shadow duration-300 flex flex-col">
             <div class="flex-grow">
               <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span>{{ news.date }}</span>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{{ news.title }}</h3>
+              <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{{ news.title
+                }}</h3>
               <p class="text-gray-600">{{ news.summary }}</p>
             </div>
-            <button
-              @click="openModal(news)"
-              class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium mt-6"
-            >
+            <button @click="openModal(news)"
+              class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium mt-6">
               閱讀更多
               <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -179,29 +146,21 @@
       </div>
 
       <!-- Modal -->
-      <div
-        v-if="showModal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-        @click="showModal = false"
-      >
-        <div
-          class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8"
-          @click.stop
-        >
+      <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+        @click="showModal = false">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8" @click.stop>
           <div class="flex justify-between items-start mb-6">
             <div>
               <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ selectedNews.title }}</h3>
               <div class="flex items-center gap-2 text-sm text-gray-500">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span>{{ selectedNews.date }}</span>
               </div>
             </div>
-            <button
-              @click="showModal = false"
-              class="text-gray-500 hover:text-gray-700 transition-colors"
-            >
+            <button @click="showModal = false" class="text-gray-500 hover:text-gray-700 transition-colors">
               <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -220,7 +179,8 @@
           <div class="text-center">
             <div class="bg-blue-100 rounded-2xl h-20 w-20 flex items-center justify-center mx-auto mb-6">
               <svg class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
               </svg>
             </div>
             <h3 class="text-xl font-bold mb-3">客製化學習</h3>
@@ -230,7 +190,8 @@
           <div class="text-center">
             <div class="bg-green-100 rounded-2xl h-20 w-20 flex items-center justify-center mx-auto mb-6">
               <svg class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <h3 class="text-xl font-bold mb-3">數據分析</h3>
@@ -250,7 +211,8 @@
           <div class="text-center">
             <div class="bg-orange-100 rounded-2xl h-20 w-20 flex items-center justify-center mx-auto mb-6">
               <svg class="h-10 w-10 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
             </div>
             <h3 class="text-xl font-bold mb-3">持續更新</h3>

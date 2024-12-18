@@ -11,7 +11,7 @@ import router from './router'
 // 設置 axios 默認值
 axios.defaults.baseURL = API_BASE_URL
 
-console.log(API_BASE_URL)
+console.log('API BASE URL:', API_BASE_URL)
 
 // 請求攔截器
 axios.interceptors.request.use(

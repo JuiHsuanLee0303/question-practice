@@ -19,6 +19,7 @@ const router = createRouter({
       path: '/question-bank',
       name: 'question-bank',
       component: () => import('@/views/QuestionBank.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/quiz-settings',
@@ -61,6 +62,30 @@ const router = createRouter({
       name: 'question-list',
       component: () => import('@/views/QuestionList.vue'),
       meta: { requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/exam-settings/:bankId',
+      name: 'exam-settings',
+      component: () => import('@/views/ExamSettings.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/exam',
+      name: 'exam',
+      component: () => import('@/views/Exam.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/exam-result',
+      name: 'exam-result',
+      component: () => import('@/views/ExamResult.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/online-bank',
+      name: 'online-bank',
+      component: () => import('@/views/QuestionBank.vue'),
+      meta: { requiresAuth: true },
     },
   ],
 })
