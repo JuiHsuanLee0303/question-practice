@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-[91vh] bg-gradient-to-br from-blue-50 to-white flex flex-col justify-center py-12 sm:px-6 lg:px-8"
+    class="bg-gradient-to-br from-blue-50 to-white flex flex-col justify-center py-12 sm:px-6 lg:px-8"
   >
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="text-center text-3xl font-extrabold text-gray-900 tracking-tight">登入帳號</h2>

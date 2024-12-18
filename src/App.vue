@@ -12,9 +12,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-white">
     <NavBar />
-    <router-view></router-view>
+    <router-view class="pt-16 sm:pt-32"></router-view>
   </div>
 </template>
 
@@ -33,7 +33,6 @@ nav {
   width: 100%;
   font-size: 12px;
   text-align: center;
-  @apply py-4 md:py-6;
 }
 
 nav a.router-link-exact-active {
@@ -74,6 +73,12 @@ nav a:first-of-type {
   nav {
     text-align: left;
     font-size: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  nav {
+    padding: 1.5rem 0;
   }
 }
 </style>
