@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-
-const API_BASE_URL = 'https://question-practice-backend.vercel.app'
+import { API_BASE_URL } from '@/config'
 
 interface User {
   uid: string
@@ -101,7 +100,7 @@ export const useAuthStore = defineStore('auth', {
         console.log('Fetching user info...')
         const response = await axios.get(`${API_BASE_URL}/auth/verify`)
         console.log('User info response:', response.data)
-        
+
         const userData = response.data.user
         const isVerified = response.data.verified
         if (!userData || typeof userData !== 'object') {

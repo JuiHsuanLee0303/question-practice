@@ -7,6 +7,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
+      component: () => import('@/views/HomeView.vue'),
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('@/views/AdminDashboard.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/question-bank',
+      name: 'question-bank',
       component: () => import('@/views/QuestionBank.vue'),
     },
     {
@@ -43,45 +54,39 @@ const router = createRouter({
       path: '/question-converter',
       name: 'question-converter',
       component: () => import('@/views/QuestionConverter.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
       path: '/question-list',
       name: 'question-list',
       component: () => import('@/views/QuestionList.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresAdmin: true },
     },
   ],
 })
 
-// 路由守衛
+// 導航守衛
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  const isAuthenticated = await authStore.checkAuth()
+  const isAuthenticated = authStore.isLoggedIn
+  const isAdmin = authStore.user?.role === 'admin'
 
-  // 需要認證的路由
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath },
-      })
-    } else {
-      next()
-    }
+  // 檢查是否需要管理員權限
+  if (to.meta.requiresAdmin && !isAdmin) {
+    return next('/')
   }
-  // 訪客路由（登入/註冊）
-  else if (to.matched.some((record) => record.meta.guest)) {
-    if (isAuthenticated) {
-      next('/')
-    } else {
-      next()
-    }
+
+  // 檢查是否需要登入
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next('/login')
   }
-  // 其他路由
-  else {
-    next()
+
+  // 已登入用戶不能訪問訪客頁面
+  if (to.meta.guest && isAuthenticated) {
+    return next('/')
   }
+
+  next()
 })
 
 export default router

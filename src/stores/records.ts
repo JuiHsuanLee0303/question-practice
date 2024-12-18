@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-
-const API_BASE_URL = 'https://question-practice-backend.vercel.app'
+import { API_BASE_URL } from '@/config'
 
 interface Record {
   id: string

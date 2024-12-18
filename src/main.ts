@@ -3,12 +3,15 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import axios from 'axios'
+import { API_BASE_URL } from '@/config'
 
 import App from './App.vue'
 import router from './router'
 
 // 設置 axios 默認值
-axios.defaults.baseURL = 'https://question-practice-backend.vercel.app'
+axios.defaults.baseURL = API_BASE_URL
+
+console.log(API_BASE_URL)
 
 // 請求攔截器
 axios.interceptors.request.use(
