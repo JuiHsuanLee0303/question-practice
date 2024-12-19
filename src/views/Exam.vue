@@ -33,30 +33,31 @@
             {{ currentQuestionIndex + 1 }}
           </span>
           <h2 class="text-2xl font-bold text-gray-800">
-            {{ currentQuestion.type === 'single' ? '單選題' : '多選題' }}
+            {{ currentQuestion.type === QuestionType.SINGLE_CHOICE ? '單選題' : '多選題' }}
           </h2>
         </div>
 
         <p class="text-gray-700 text-lg leading-relaxed mb-8 pl-16">{{ currentQuestion.content }}</p>
 
         <div class="space-y-4 pl-16">
-          <label v-for="option in currentQuestion.options" :key="option.key"
+          <label v-for="(option, index) in currentQuestion.options" :key="index"
             class="flex items-start p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all duration-300 cursor-pointer group">
             <div class="flex items-center h-6">
-              <input :type="currentQuestion.type === 'single' ? 'radio' : 'checkbox'"
-                :name="'question-' + currentQuestionIndex" :value="option.key"
-                v-model="userAnswers[currentQuestionIndex]" :disabled="isTimeUp"
+              <input :type="currentQuestion.type === QuestionType.SINGLE_CHOICE ? 'radio' : 'checkbox'"
+                :name="'question-' + currentQuestionIndex" 
+                :value="String.fromCharCode(65 + index)"
+                v-model="userAnswers[currentQuestionIndex].answers"
+                :disabled="isTimeUp"
                 class="w-5 h-5 text-blue-600 border-2 border-gray-300 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
             </div>
             <div class="ml-4 flex-1">
               <div class="flex items-center">
-                <span
-                  class="text-lg font-semibold text-gray-700 group-hover:text-blue-600 transition-colors duration-300">
-                  {{ option.key }}
+                <span class="text-lg font-semibold text-gray-700 group-hover:text-blue-600 transition-colors duration-300">
+                  {{ String.fromCharCode(65 + index) }}
                 </span>
                 <span class="mx-3 text-gray-300">|</span>
                 <span class="text-gray-600 group-hover:text-gray-900 transition-colors duration-300">
-                  {{ option.value }}
+                  {{ option }}
                 </span>
               </div>
             </div>
@@ -64,7 +65,7 @@
         </div>
       </div>
 
-      <!-- 底部导航 -->
+      <!-- 底部導航 -->
       <div class="flex items-center justify-between pt-8 border-t border-gray-200">
         <button @click="prevQuestion" :disabled="currentQuestionIndex === 0"
           class="flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300">
@@ -78,7 +79,7 @@
           <button v-for="(_, index) in questions" :key="index" @click="goToQuestion(index)"
             class="w-3 h-3 rounded-full transition-all duration-300 focus:outline-none" :class="[
               index === currentQuestionIndex ? 'bg-blue-500 transform scale-125' : '',
-              userAnswers[index] && userAnswers[index].length > 0 ? 'bg-green-500' : 'bg-gray-300',
+              userAnswers[index].answers.length > 0 ? 'bg-green-500' : 'bg-gray-300',
               'hover:opacity-75'
             ]">
           </button>
@@ -109,25 +110,32 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 import { config } from '../config'
+import { useExamResultStore } from '../stores/examResult'
 
-interface Option {
-  key: string
-  value: string
+enum QuestionType {
+  SINGLE_CHOICE = 'SINGLE_CHOICE',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  FILL_IN_THE_BLANK = 'FILL_IN_THE_BLANK',
+  TRUE_OR_FALSE = 'TRUE_OR_FALSE',
+  SHORT_ANSWER = 'SHORT_ANSWER',
+  ESSAY = 'ESSAY'
 }
 
 interface Question {
   id: number
   content: string
-  type: 'single' | 'multiple'
-  options: Option[]
+  type: QuestionType
+  options: string[]
 }
 
 const router = useRouter()
 const route = useRoute()
+const examResultStore = useExamResultStore()
 const questions = ref<Question[]>([])
 const currentQuestionIndex = ref(0)
-const userAnswers = ref<string[][]>([])
-const timeRemaining = ref(7200) // 2小時考試時間
+const userAnswers = ref<{ questionId: number; answers: string[] }[]>([])
+const timeTotal = ref(20)
+const timeRemaining = ref(timeTotal.value)
 const isTimeUp = ref(false)
 let timer: number
 
@@ -136,20 +144,27 @@ const currentQuestion = computed(() => {
 })
 
 const canSubmit = computed(() => {
-  return userAnswers.value.some(answer => answer && answer.length > 0)
+  return userAnswers.value.some(answer => answer.answers.length > 0)
 })
 
 const fetchQuestions = async () => {
   try {
-    const { chapters, questionCount } = route.query
+    console.log(route.query)
+    const { bankIds, questionCount } = route.query
+    const bankIdsArray = Array.isArray(bankIds) ? bankIds.join(',') : bankIds
+    console.log(bankIdsArray, questionCount)
     const response = await axios.get(`${config.apiBaseUrl}/questions/random`, {
       params: {
-        chapters,
+        examIds: bankIdsArray,
         count: questionCount
       }
     })
+    console.log(response.data)
     questions.value = response.data
-    userAnswers.value = new Array(questions.value.length).fill([])
+    userAnswers.value = questions.value.map(q => ({
+      questionId: q.id,
+      answers: [] as string[]
+    })) as { questionId: number; answers: string[] }[]
   } catch (error) {
     console.error('獲取題目失敗:', error)
   }
@@ -191,18 +206,23 @@ const goToQuestion = (index: number) => {
 }
 
 const submitExam = async () => {
+  console.log(userAnswers.value)
   try {
-    await axios.post(`${config.apiBaseUrl}/exam-results`, {
+    const response = await axios.post(`${config.apiBaseUrl}/questions/exam-results`, {
       answers: userAnswers.value,
-      timeSpent: 7200 - timeRemaining.value
+      timeSpent: timeTotal.value - timeRemaining.value
     })
-    router.push({
-      name: 'exam-result',
-      query: {
-        answers: JSON.stringify(userAnswers.value),
-        timeSpent: (7200 - timeRemaining.value).toString()
-      }
+    console.log(response.data)
+    
+    // 將結果存儲到 Pinia store
+    examResultStore.setResult({
+      questions: response.data,
+      userAnswers: userAnswers.value,
+      timeSpent: timeTotal.value - timeRemaining.value
     })
+    
+    // 直接導航到結果頁面，不帶參數
+    router.push({ name: 'exam-result' })
   } catch (error) {
     console.error('提交答案失敗:', error)
   }

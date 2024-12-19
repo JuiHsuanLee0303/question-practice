@@ -53,6 +53,15 @@
                 ]">
                 題目列表
               </router-link>
+              <router-link to="/api-tester"
+                class="inline-flex items-center px-2 pt-1 text-sm font-medium text-gray-900 border-b-2 transition-all duration-200"
+                :class="[
+                  $route.path === '/api-tester'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent hover:border-gray-300 hover:text-blue-500',
+                ]">
+                API測試
+              </router-link>
               <router-link to="/admin"
                 class="inline-flex items-center px-2 pt-1 text-sm font-medium text-gray-900 border-b-2 transition-all duration-200"
                 :class="[
@@ -195,6 +204,18 @@
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
             題目列表
+          </router-link>
+          <router-link to="/api-tester"
+            class="flex items-center px-3 py-2.5 text-base font-medium rounded-xl transition-colors" :class="[
+              $route.path === '/api-tester'
+                ? 'text-blue-600 bg-blue-50'
+                : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50',
+            ]" @click="showMobileMenu = false">
+            <svg class="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            API測試
           </router-link>
           <router-link to="/admin"
             class="flex items-center px-3 py-2.5 text-base font-medium rounded-xl transition-colors" :class="[

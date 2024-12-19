@@ -164,6 +164,7 @@ const deletingQuestion = ref<Question | null>(null)
 const fetchQuestions = async () => {
   try {
     const response = await axios.get('/questions')
+    console.log(response.data)
     questions.value = response.data
   } catch (error) {
     console.error('Failed to fetch questions:', error)

@@ -46,6 +46,12 @@ const router = createRouter({
       meta: { guest: true },
     },
     {
+      path: '/api-tester',
+      name: 'api-tester',
+      component: () => import('@/views/ApiTester.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
+    {
       path: '/history',
       name: 'history',
       component: () => import('@/views/UserHistory.vue'),
@@ -64,7 +70,7 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/exam-settings/:bankId',
+      path: '/exam-settings',
       name: 'exam-settings',
       component: () => import('@/views/ExamSettings.vue'),
       meta: { requiresAuth: true },

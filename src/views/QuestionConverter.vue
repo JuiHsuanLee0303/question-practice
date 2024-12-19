@@ -2,6 +2,102 @@
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6">題目轉換器</h1>
 
+    <!-- 考試選擇 -->
+    <div class="mb-6">
+      <h2 class="text-xl font-bold mb-4">選擇題庫</h2>
+      <div class="flex gap-4 mb-4">
+        <button
+          @click="examMode = 'existing'"
+          class="px-4 py-2 rounded"
+          :class="examMode === 'existing' ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+        >
+          既有題庫
+        </button>
+        <button
+          @click="examMode = 'new'"
+          class="px-4 py-2 rounded"
+          :class="examMode === 'new' ? 'bg-blue-500 text-white' : 'bg-gray-200'"
+        >
+          新增題庫
+        </button>
+      </div>
+
+      <!-- 既有題庫選擇 -->
+      <div v-if="examMode === 'existing'" class="mb-4">
+        <select
+          v-model="selectedExamId"
+          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>請選擇題庫</option>
+          <option v-for="exam in exams" :key="exam.id" :value="exam.id">
+            {{ exam.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- 新增題庫表單 -->
+      <div v-else class="mb-4">
+        <div class="space-y-4">
+          <div class="flex gap-4">
+            <input
+              v-model="newExamName"
+              type="text"
+              placeholder="請輸入題庫名稱"
+              class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              v-model="newExamCode"
+              type="text"
+              placeholder="題庫代號（選填）"
+              class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div class="flex gap-4">
+            <div class="flex-1">
+              <select
+                v-model="selectedCategory"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @change="handleCategoryChange"
+              >
+                <option value="">請選擇題庫類型（選填）</option>
+                <option value="programming">程式設計</option>
+                <option value="network">網路概論</option>
+                <option value="database">資料庫</option>
+                <option value="security">資訊安全</option>
+                <option value="os">作業系統</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+            <div v-if="selectedCategory === 'other'" class="flex-1">
+              <input
+                v-model="newExamCategory"
+                type="text"
+                placeholder="請輸入自訂類型"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          <div>
+            <textarea
+              v-model="newExamDescription"
+              placeholder="題庫描述（選填）"
+              rows="3"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            ></textarea>
+          </div>
+          <div class="flex justify-end">
+            <button
+              @click="createExam"
+              class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+              :disabled="!newExamName"
+            >
+              建立題庫
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 輸入模式選擇 -->
     <div class="mb-6">
       <div class="flex gap-4">
@@ -104,9 +200,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Modal from '@/components/Modal.vue'
+
+interface ExamData {
+  id: string
+  name: string
+  code?: string
+  category?: string
+  description?: string
+}
 
 interface QuestionData {
   examId: string
@@ -128,6 +232,14 @@ const error = ref('')
 const showModal = ref(false)
 const modalTitle = ref('')
 const modalMessage = ref('')
+const examMode = ref<'existing' | 'new'>('existing')
+const exams = ref<ExamData[]>([])
+const selectedExamId = ref('')
+const newExamName = ref('')
+const newExamCode = ref('')
+const newExamCategory = ref('')
+const newExamDescription = ref('')
+const selectedCategory = ref('')
 
 // 載入範例JSON
 const loadExampleJson = () => {
@@ -250,12 +362,13 @@ const convertQuestion = () => {
       return
     }
 
-    // 解析考試和章節信息
+    let currentQuestion: Partial<QuestionData> | null = null
     let examId = '1'
     let examName = '預設考卷'
     let chapterNum = ''
     let chapterName = ''
     let currentIndex = 0
+    const questions: QuestionData[] = []
 
     // 解析考試ID
     const examIdMatch = lines[currentIndex].match(/^考試[:：]\s*(.+)/)
@@ -285,9 +398,6 @@ const convertQuestion = () => {
       currentIndex++
     }
 
-    const questions: QuestionData[] = []
-    let currentQuestion: Partial<QuestionData> | null = null
-
     for (let i = currentIndex; i < lines.length; i++) {
       const line = lines[i]
 
@@ -305,7 +415,7 @@ const convertQuestion = () => {
       if (questionMatch) {
         // 如果有前一個題目，保存它
         if (currentQuestion && currentQuestion.options?.length) {
-          questions.push(currentQuestion as QuestionData)
+          convertedQuestions.value.push(currentQuestion as QuestionData)
         }
 
         // 檢查是否為多選題
@@ -349,28 +459,68 @@ const convertQuestion = () => {
         }
 
         // 保存當前題目
-        questions.push(currentQuestion as QuestionData)
+        convertedQuestions.value.push(currentQuestion as QuestionData)
         currentQuestion = null
       }
     }
 
-    // 檢查是否還有最後��個未保存的題目
+    // 檢查是否還有最後一個未保存的題目
     if (currentQuestion && currentQuestion.options?.length) {
-      questions.push(currentQuestion as QuestionData)
+      convertedQuestions.value.push(currentQuestion as QuestionData)
     }
 
-    if (questions.length === 0) {
+    if (convertedQuestions.value.length === 0) {
       error.value = '無法解析任何有效題目'
       return
     }
-
-    convertedQuestions.value = questions
   } catch (e) {
     error.value = '轉換過程中發生錯誤，請檢查輸入格式'
     console.error(e)
   }
 }
 
+// 載入題庫列表
+const fetchExams = async () => {
+  try {
+    const response = await axios.get('/exams')
+    exams.value = response.data
+  } catch (e) {
+    error.value = '載入題庫列表失敗'
+    console.error(e)
+  }
+}
+
+// 建立新題庫
+const createExam = async () => {
+  try {
+    const examData = {
+      name: newExamName.value,
+      code: newExamCode.value || undefined,
+      category: selectedCategory.value === 'other' ? newExamCategory.value || undefined : selectedCategory.value || undefined,
+      description: newExamDescription.value || undefined
+    }
+
+    const response = await axios.post('/exams', examData)
+    selectedExamId.value = response.data.id
+    examMode.value = 'existing'
+    await fetchExams()
+    showModal.value = true
+    modalTitle.value = '成功'
+    modalMessage.value = '題庫建立成功！'
+    
+    // 清空表單
+    newExamName.value = ''
+    newExamCode.value = ''
+    selectedCategory.value = ''
+    newExamCategory.value = ''
+    newExamDescription.value = ''
+  } catch (e) {
+    error.value = '建立題庫失敗'
+    console.error(e)
+  }
+}
+
+// 修改提交到後端的方法
 const submitToBackend = async () => {
   try {
     error.value = ''
@@ -379,7 +529,13 @@ const submitToBackend = async () => {
       return
     }
 
-    const response = await axios.post('/questions', convertedQuestions.value)
+    if (!selectedExamId.value && examMode.value === 'existing') {
+      error.value = '請選擇題庫'
+      return
+    }
+
+    const examId = selectedExamId.value
+    const response = await axios.post(`/exams/${examId}/questions`, convertedQuestions.value)
     modalTitle.value = '成功'
     modalMessage.value = '題目提交成功！'
     showModal.value = true
@@ -388,4 +544,16 @@ const submitToBackend = async () => {
     console.error(e)
   }
 }
+
+const handleCategoryChange = () => {
+  if (selectedCategory.value !== 'other') {
+    newExamCategory.value = selectedCategory.value
+  } else {
+    newExamCategory.value = ''
+  }
+}
+
+onMounted(() => {
+  fetchExams()
+})
 </script>
